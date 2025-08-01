@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Raja Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #333;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Splash Intro */
+    .intro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #ffffff;
+      animation: fadeOut 2.5s forwards;
+    }
+
+    .intro img { width: 80px; }
+    .intro h1 { margin: 20px 0 10px; font-size: 28px; font-weight: bold; color: #333; }
+    .intro p { color: #777; }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; z-index: 2; }
+      90% { opacity: 1; }
+      100% { opacity: 0; z-index: -1; display: none; }
+    }
+
+    /* Calculator Layout */
+    .calculator-container {
+      max-width: 400px;
+      margin: 40px auto;
+      background-color: #222;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .screen {
+      width: 100%;
+      padding: 20px;
+      font-size: 32px;
+      text-align: right;
+      border: none;
+      background-color: #111;
+      margin-bottom: 20px;
+      color: #fff;
+      border-radius: 10px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    button {
+      padding: 25px;
+      font-size: 20px;
+      border: none;
+      border-radius: 12px;
+      background-color: #444;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    button.operator {
+      background-color: #f57c00;
+    }
+
+    button.operator:hover {
+      background-color: #ff8f00;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    @media (max-width: 450px) {
+      .calculator-container { margin: 20px; }
+      button { padding: 20px; font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Splash Screen -->
+  <div class="intro" id="intro">
+    <img src="icon.png" alt="Calculator Icon">
+    <h1>Raja Calculator</h1>
+    <p>Created by Raja Nasir</p>
+  </div>
+
+  <!-- Calculator -->
+  <div class="calculator-container">
+    <input type="text" id="screen" class="screen" disabled>
+    <div class="buttons">
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button class="operator" onclick="press('/')">÷</button>
+
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button class="operator" onclick="press('*')">×</button>
+
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button class="operator" onclick="press('-')">−</button>
+
+      <button onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+      <button onclick="calculate()">=</button>
+      <button class="operator" onclick="press('+')">+</button>
+
+      <button style="grid-column: span 4; background-color: #f4978e;" onclick="clearScreen()">Clear</button>
+    </div>
+  </div>
+
+  <footer>Created by <strong>RAJA NASIR</strong></footer>
+
+  <!-- 🔊 Sound Effects -->
+  <audio id="soundClick" src="Click.mp3" preload="auto"></audio>
+  <audio id="soundEqual" src="Click.mp3" preload="auto"></audio>
+  <audio id="soundClear" src="Click.mp3" preload="auto"></audio>
+  <audio id="soundError" src="Error.mp3" preload="auto"></audio>
+
+  <script>
+    // Splash intro disappears after 2.5 seconds
+    setTimeout(() => {
+      document.getElementById("intro").style.display = "none";
+    }, 2500);
+
+    const screen = document.getElementById("screen");
+
+    function play(id) {
+      const sound = document.getElementById(id);
+      sound.currentTime = 0;
+      sound.play();
+    }
+
+    function press(val) {
+      play("soundClick");
+      screen.value += val;
+    }
+
+    function clearScreen() {
+      play("soundClear");
+      screen.value = "";
+    }
+
+    function calculate() {
+      try {
+        const result = eval(screen.value);
+        screen.value = result;
+        play("soundEqual");
+      } catch {
+        screen.value = "Error";
+        play("soundError");
+      }
+    }
+  </script>
+
+</body>
+</html>
